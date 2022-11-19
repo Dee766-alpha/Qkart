@@ -3,11 +3,11 @@ package QKART_SANITY_LOGIN.Module1;
 import java.sql.Timestamp;
 
 import org.openqa.selenium.By;
-//import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
-//import org.openqa.selenium.support.ui.ExpectedConditions;
-//import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class Register {
     RemoteWebDriver driver;
@@ -37,8 +37,7 @@ public class Register {
             // Concatenate the timestamp to string to form unique timestamp
             test_data_username = Username + "_" + String.valueOf(timestamp.getTime());
         else
-             test_data_username = Username;
-             
+        test_data_username = Username;
 
         // Type the generated username in the username field
         username_txt_box.sendKeys(test_data_username);
@@ -52,7 +51,7 @@ public class Register {
 
         // Find the Confirm password text box
         WebElement confirm_password_txt_box;
-         confirm_password_txt_box = this.driver.findElement(By.id("confirmPassword"));
+        confirm_password_txt_box = this.driver.findElement(By.id("confirmPassword"));
 
         // Enter the Confirm Password Value
         confirm_password_txt_box.sendKeys(test_data_password);
@@ -62,9 +61,12 @@ public class Register {
 
         // Click the register now button
         register_now_button.click();
-         Thread.sleep(7000);
-         this.lastGeneratedUsername = test_data_username;
-        
-         return this.driver.getCurrentUrl().endsWith("/login");
+        Thread.sleep(5000);
+
+
+
+        this.lastGeneratedUsername = test_data_username;
+
+        return this.driver.getCurrentUrl().endsWith("/login");
     }
 }
