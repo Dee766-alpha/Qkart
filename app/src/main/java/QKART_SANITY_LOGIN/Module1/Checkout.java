@@ -1,7 +1,7 @@
 package QKART_SANITY_LOGIN.Module1;
 
 import java.util.List;
-
+import javax.lang.model.util.ElementScanner6;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -32,7 +32,17 @@ public class Checkout {
              * Click on the "Add new address" button, enter the addressString in the address
              * text box and click on the "ADD" button to save the address
              */
-            return false;
+            Thread.sleep(3000);
+            WebElement addNewAddressElement =
+            driver.findElement(By.xpath("//button[@id='add-new-btn']"));
+            addNewAddressElement.click();
+            Thread.sleep(1000);
+            WebElement addressElement =driver.findElement(By.xpath("//textarea[@placeholder='Enter your complete address']"));
+            addressElement.sendKeys(addresString);
+            WebElement addButton =driver.findElement(By.xpath("//button[text()='Add']"));
+            addButton.click();
+
+            return true;
         } catch (Exception e) {
             System.out.println("Exception occurred while entering address: " + e.getMessage());
             return false;
@@ -50,8 +60,24 @@ public class Checkout {
              * Iterate through all the address boxes to find the address box with matching
              * text, addressToSelect and click on it
              */
-            System.out.println("Unable to find the given address");
+            List<WebElement> addElements =driver
+            .findElements(By.xpath("//input[@name='address']/parent::span/parent::div/p"));
+            for(WebElement addressElement : addElements){
+                if(addressElement.getText().equals(addressToSelect)){
+                    addressElement.click();
+                    break;
+                }
+                else{
+                    System.out.println("Unable to find the given address");
+           
+                }
+            }
+                //System.out.println("Unable to find the given address");
             return false;
+                
+            
+            
+            
         } catch (Exception e) {
             System.out.println("Exception Occurred while selecting the given address: " + e.getMessage());
             return false;
@@ -66,9 +92,16 @@ public class Checkout {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 05: MILESTONE 4
             // Find the "PLACE ORDER" button and click on it
-            return false;
 
-        } catch (Exception e) {
+            Thread.sleep((2000));
+            WebElement  placeOrderButton=
+            driver.findElement(By.xpath("//button[text()='PLACE ORDER']"));
+            placeOrderButton.click();
+            return true;
+        }
+            //return false;
+
+         catch (Exception e) {
             System.out.println("Exception while clicking on PLACE ORDER: " + e.getMessage());
             return false;
         }
@@ -80,8 +113,15 @@ public class Checkout {
     public Boolean verifyInsufficientBalanceMessage() {
         try {
             // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 08: MILESTONE 7
-            return false;
-        } catch (Exception e) {
+            WebElement inmessage = driver.findElement(By.id("notistack-snackbar"));
+            if(inmessage.getText().equals("You do not have enough balance in your wallet for this purchase")){
+                return true;
+            }else{
+                return false;
+            }
+            
+            
+        }catch (Exception e) {
             System.out.println("Exception while verifying insufficient balance message: " + e.getMessage());
             return false;
         }
