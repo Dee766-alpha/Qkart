@@ -2,12 +2,12 @@ package QKART_SANITY_LOGIN.Module1;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.xpath.XPath;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.w3c.dom.Text;
 
 public class Home {
     RemoteWebDriver driver;
@@ -29,11 +29,8 @@ public class Home {
             WebElement logout_button = driver.findElement(By.className("MuiButton-text"));
             logout_button.click();
 
-            // SLEEP_STMT_10: Wait for Logout to complete
             // Wait for Logout to Complete
             Thread.sleep(3000);
-            //driver.manage().timeouts().implicitlyWait(3000, TimeUnit.SECONDS);
-
 
             return true;
         } catch (Exception e) {
@@ -58,8 +55,6 @@ public class Home {
             Thread.sleep(2000);
             search_box.sendKeys(product);
             Thread.sleep(2000);
-            //WebDriverWait wait = new WebDriverWait(driver, 30);
-            //wait.until(ExpectedConditions.textToBePresentInElementLocated(By.className("css-yg30e6"),text:"YONEX Smash Badminton Racquet));
 
             return true;
         } catch (Exception e) {

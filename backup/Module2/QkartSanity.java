@@ -6,7 +6,6 @@ package QKART_SANITY_LOGIN.Module1;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -45,35 +43,6 @@ public class QkartSanity {
                 message, status));
     }
 
-    public static void takeScreenshot(WebDriver driver, String screenshotType, String description) {
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION - Implement method using below steps
-        /*
-         * 1. Check if the folder "/screenshots" exists, create if it doesn't 2. Generate a unique
-         * string using the timestamp 3. Capture screenshot 4. Save the screenshot inside the
-         * "/screenshots" folder using the following naming convention:
-         * screenshot_<Timestamp>_<ScreenshotType>_<Description>.png eg:
-         * screenshot_2022-03-05T06:59:46.015489_StartTestcase_Testcase01.png
-         */
-        try {
-			File theDir = new File("/screenshots");
-			if (!theDir.exists()) {
-				theDir.mkdirs();
-			}
-
-			String timestamp = String.valueOf(java.time.LocalDateTime.now());
-			String fileName = String.format("screenshot_%s_%s_%s.png", timestamp, screenshotType, description);
-
-			TakesScreenshot scrShot = ((TakesScreenshot) driver);
-			File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
-
-			File DestFile = new File("screenshots/" + fileName);
-			FileUtils.copyFile(SrcFile, DestFile);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-
 
     /*
      * Testcase01: Verify the functionality of Login button on the Home page
@@ -94,7 +63,6 @@ public class QkartSanity {
         } else {
             logStatus("TestCase 1", "Test Case Pass. User Registration Pass", "PASS");
         }
-        takeScreenshot(driver, "StartTestCase","TestCase01");
 
         // Save the last generated username
         lastGeneratedUserName = registration.lastGeneratedUsername;
@@ -134,7 +102,6 @@ public class QkartSanity {
             return false;
 
         }
-        takeScreenshot(driver, "StartTestCase","TestCase02");
 
         // Save the last generated username
         lastGeneratedUserName = registration.lastGeneratedUsername;
@@ -156,13 +123,12 @@ public class QkartSanity {
     public static Boolean TestCase03(RemoteWebDriver driver) throws InterruptedException {
         logStatus("TestCase 3", "Start test case : Verify functionality of search box ", "DONE");
         boolean status;
-        takeScreenshot(driver, "StartTestCase","TestCase03");
 
         // Visit the home page
         Home homePage = new Home(driver);
         homePage.navigateToHome();
 
-        //Thread.sleep(5000);
+        Thread.sleep(5000);
 
         // Search for the "yonex" product
         status = homePage.searchForProduct("yonex");
@@ -226,7 +192,6 @@ public class QkartSanity {
     public static Boolean TestCase04(RemoteWebDriver driver) throws InterruptedException {
         logStatus("TestCase 4", "Start test case : Verify the presence of size Chart", "DONE");
         boolean status = false;
-        takeScreenshot(driver, "StartTestCase","TestCase04");
 
         // Visit home page
         Home homePage = new Home(driver);
@@ -291,8 +256,6 @@ public class QkartSanity {
         Boolean status;
         logStatus("Start TestCase", "Test Case 5: Verify Happy Flow of buying products", "DONE");
 
-        takeScreenshot(driver, "StartTestCase","TestCase05");
-
         // Go to the Register page
         Register registration = new Register(driver);
         registration.navigateToRegisterPage();
@@ -339,8 +302,6 @@ public class QkartSanity {
         checkoutPage.placeOrder();
         Thread.sleep(3000);
 
-        
-
         // Check if placing order redirected to the Thansk page
         status = driver.getCurrentUrl().endsWith("/thanks");
 
@@ -364,7 +325,6 @@ public class QkartSanity {
         Home homePage = new Home(driver);
         Register registration = new Register(driver);
         Login login = new Login(driver);
-        takeScreenshot(driver, "StartTestCase","TestCase06");
 
         // TODO: CRIO_TASK_MODULE_TEST_AUTOMATION - TEST CASE 06: MILESTONE 5
 
@@ -460,7 +420,6 @@ public class QkartSanity {
         Thread.sleep(3000);
 
         status = homePage.verifyCartContents(expectedResult);
-        takeScreenshot(driver, "StartTestCase","TestCase07");
 
         logStatus("End TestCase", "Test Case 7: Verify that cart contents are persisted after logout: ",
                 status ? "PASS" : "FAIL");
@@ -474,8 +433,6 @@ public class QkartSanity {
         logStatus("Start TestCase",
                 "Test Case 8: Verify that insufficient balance error is thrown when the wallet balance is not enough",
                 "DONE");
-
-                takeScreenshot(driver, "StartTestCase","TestCase08");
 
         Register registration = new Register(driver);
         registration.navigateToRegisterPage();
@@ -525,233 +482,6 @@ public class QkartSanity {
 
         return status;
     }
-
-    public static Boolean TestCase09(RemoteWebDriver driver) throws InterruptedException {
-        Boolean status = false;
-        logStatus("Start TestCase","Test Case 9: Test Case for Multitab Scenario","DONE");
-        List<String> expectedResult =
-                Arrays.asList("YONEX Smash Badminton Racquet");
-
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION -
-        Home homePage = new Home(driver);
-        Register registration = new Register(driver);
-        Login login = new Login(driver);
-
-        // TODO: Register a new user
-        registration.navigateToRegisterPage();
-        status = registration.registerUser("testUser", "abc@123", true);
-        
-        // TODO: Login using the newly registed user
-        lastGeneratedUserName = registration.lastGeneratedUsername;
-        login.navigateToLoginPage();
-        status = login.PerformLogin(lastGeneratedUserName, "abc@123");
-
-        String mainWindowHandle = driver.getWindowHandle();
-
-        status = homePage.searchForProduct("YONEX Smash Badminton Racquet");
-        homePage.addProductToCart("YONEX Smash Badminton Racquet");
-        //Open new tab
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("window.open();");
-
-        ArrayList<String> twoTabs = new ArrayList<String>(driver.getWindowHandles());
-        driver.switchTo().window(twoTabs.get(1));
-        driver.navigate().to("https://crio-qkart-frontend-qa.vercel.app/");
-        Thread.sleep(3000);
-       
-
-        status = homePage.verifyCartContents(expectedResult);
-        Thread.sleep(2000);
-        driver.close();
-        
-        driver.switchTo().window(mainWindowHandle);
-        // WebElement cartItem = driver.findElement(By.xpath("//*[@id='root']/div/div/div[3]/div[2]/div/div[1]/div/div[2]/div[1]"));
-        // String cartItemname = cartItem.getText();
-        // if (cartItemname.equals("YONEX Smash Badminton Racquet")) {
-        //     return true;
-        // }
-        
-        return status;
-    }
-
-    public static Boolean TestCase10(RemoteWebDriver driver) throws InterruptedException {
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION -
-        Home homePage = new Home(driver);
-        homePage.navigateToHome();
-        Thread.sleep(5000);
-        String mainWindowHandle = driver.getWindowHandle();
-        // Locating element by link text and store in variable "Element"
-        WebElement prvcyBtn = driver.findElement(By.linkText("Privacy policy"));
-
-        // Scrolling down the page till the element is found
-        // JavascriptExecutor js = (JavascriptExecutor) driver;
-        // js.executeScript("arguments[0].scrollIntoView();", prvcyBtn);
-        Thread.sleep(2000);
-        prvcyBtn.click();
-        Thread.sleep(3000);
-
-        String url1="";
-        ArrayList<String> twoTabs = new ArrayList<String>(driver.getWindowHandles());
-
-        driver.switchTo().window(twoTabs.get(1));
-        WebElement privacyPage = driver.findElement(By.xpath("//*[@id='root']/div/div[2]/h2"));
-                if(privacyPage.isDisplayed()) {
-                    // Switch back to the original window handle
-                    driver.switchTo().window(mainWindowHandle);
-                    Thread.sleep(3000);    
-                    url1 = driver.getCurrentUrl();
-                    WebElement termsBtn = driver.findElement(By.linkText("Terms of Service"));
-                    //js.executeScript("arguments[0].scrollIntoView();", termsBtn);
-                    Thread.sleep(2000);
-                    termsBtn.click();
-
-                }    
-        ArrayList<String> threeTabs = new ArrayList<String>(driver.getWindowHandles());
-        if (url1.equals("https://crio-qkart-frontend-qa.vercel.app/")) {
-        driver.switchTo().window(threeTabs.get(2));
-        Thread.sleep(3000);
-        WebElement termsPage = driver.findElement(By.xpath("//*[@id='root']/div/div[2]/h2")); 
-        if(termsPage.isDisplayed()) {
-        // Switch back to the original window handle
-        driver.switchTo().window(mainWindowHandle);
-        Thread.sleep(3000);
-        }
-    }
-       
-        for (String handle : driver.getWindowHandles()) {
-            // If not the main window, switch to it so that we can close it
-            if (!handle.equals(mainWindowHandle)) {
-                    driver.switchTo().window(handle);
-                    Thread.sleep(2000);
-                    driver.close();
-                    
-            }  
-        }
-         // Switch back to the original window handle
-         driver.switchTo().window(mainWindowHandle);
-         Thread.sleep(2000); 
-        Boolean status = false;
-        return status;
-    }
-
-    public static Boolean TestCase11(RemoteWebDriver driver) throws InterruptedException {
-        Boolean status = false;
-        Home homePage = new Home(driver);
-        homePage.navigateToHome();
-        Thread.sleep(2000);
-
-        // WebElement contUs = driver.findElement(By.linkText("Contact us"));
-        driver.findElement(By.xpath("//*[text()='Contact us']")).click();
-        // JavascriptExecutor js = (JavascriptExecutor) driver;
-        // js.executeScript("arguments[0].scrollIntoView();", contUs);
-        // js.executeScript("window.scrollBy(0,document.body.scrollHeight)");
-
-        WebElement name = driver.findElement(By.xpath("//input[@placeholder='Name']"));
-        name.sendKeys("crio user");
-        WebElement email = driver.findElement(By.xpath("//input[@placeholder='Email']"));
-        email.sendKeys("criouser@gmail.com");
-        WebElement message = driver.findElement(By.xpath("//input[@placeholder='Message']"));
-        message.sendKeys("Testing the contact us page");
-
-        WebElement contactUs = driver.findElement(
-            By.xpath("/html/body/div[2]/div[3]/div/section/div/div/div/form/div/div/div[4]/div/button"));
-
-        Thread.sleep(2000);
-        contactUs.click();
-        Thread.sleep(2000);
-
-        // WebDriverWait wait = new WebDriverWait(driver, 30);
-        // wait.until(ExpectedConditions.invisibilityOf(contactUs));
-
-        try {
-            // assertFalse(contUs.isDisplayed(), "Failed to verify that contact us option is working correctly");
-            status = contactUs.isDisplayed();
-        }
-        catch(Exception e) {
-            // System.out.println(e);
-            if(status == false) {
-                return true;
-            }
-            //assertFalse(false, "Failed to verify that contact us option is working correctly");
-            return true;
-        }
-
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION -
-        return status;
-    }
-
-    public static Boolean TestCase12(RemoteWebDriver driver) throws InterruptedException {
-        Boolean status = false;
-        // TODO: CRIO_TASK_MODULE_SYNCHRONISATION -
-
-        Home homePage = new Home(driver);
-        Register registration = new Register(driver);
-        Login login = new Login(driver);
-
-        // TODO: Register a new user
-        registration.navigateToRegisterPage();
-        status = registration.registerUser("testUser", "abc@123", true);
-        
-        // TODO: Login using the newly registed user
-        lastGeneratedUserName = registration.lastGeneratedUsername;
-        login.navigateToLoginPage();
-        status = login.PerformLogin(lastGeneratedUserName, "abc@123");
-
-        status = homePage.searchForProduct("YONEX Smash Badminton Racquet");
-        homePage.addProductToCart("YONEX Smash Badminton Racquet");
-
-        homePage.clickCheckout();
-
-        Checkout checkoutPage = new Checkout(driver);
-        checkoutPage.addNewAddress("Addr line 1 addr Line 2 addr line 3");
-        checkoutPage.selectAddress("Addr line 1 addr Line 2 addr line 3");
-
-        checkoutPage.placeOrder();
-        Thread.sleep(3000);
-
-        String currentURL = driver.getCurrentUrl();
-
-        List<WebElement> Advertisements = driver.findElements(By.xpath("//iframe"));
-
-        status = Advertisements.size() == 3;
-
-        if(!status) {
-            System.out.println("Failed to verify that 3 advertisements are available");
-        }
-
-        // WebDriverWait wait = new WebDriverWait(driver, 30);
-        // wait.until(ExpectedConditions.presenceOfElementLocated(By.tagName("iframe")));
-
-        // WebElement frameOne = driver.findElement(By.xpath("//*[@id='root']/div/div[2]/div/iframe[1]"));
-        // WebElement frameTwo = driver.findElement(By.xpath("//*[@id='root']/div/div[2]/div/iframe[2]"));
-        // WebElement adframe = driver.findElement(By.xpath("//*[@id='root']/div/div[2]/iframe"));
-        //driver.navigate().refresh();
-        
-        driver.switchTo().frame(0);
-        driver.findElement(By.xpath("//button[text()='Buy Now']")).click();
-        
-        status = !driver.getCurrentUrl().equals(currentURL);
-        
-        if(!status) {
-            System.out.println("Failed to verify that advertisement 1 is clickable");
-        }
-        driver.navigate().back();
-        driver.switchTo().parentFrame();
-
-        //driver.navigate().refresh();
-        driver.switchTo().frame(1);
-       
-        driver.findElement(By.xpath("//button[text()='Buy Now']")).click();;
-        driver.switchTo().parentFrame();
-
-        status = !driver.getCurrentUrl().equals(currentURL);
-
-        if(!status) {
-            System.out.println("Failed to verify that advertisement 2 is clickable");
-        }
-        return status;
-    }
-
 
 
     public static void main(String[] args) throws InterruptedException, MalformedURLException {
@@ -834,43 +564,6 @@ public class QkartSanity {
              }
 
             System.out.println("");
-
-            // // // // // // // System.out.println("");
-
-            // // // // // // // Execute Test Case 9
-            totalTests += 1;
-            status = TestCase09(driver);
-            if (status) {
-            passedTests += 1;
-            }
-
-            System.out.println("");
-
-            // // // // // // Execute Test Case 10
-            totalTests += 1;
-            status = TestCase10(driver);
-            if (status) {
-                passedTests += 1;
-            }
-
-            System.out.println("");
-
-            // // // Execute Test Case 11
-            totalTests += 1;
-            status = TestCase11(driver);
-            if (status) {
-            passedTests += 1;
-            }
-
-            System.out.println("");
-
-            // // // // Execute Test Case 12
-            totalTests += 1;
-            status = TestCase12(driver);
-            if (status) {
-            passedTests += 1;
-            }
-
 
         } catch (Exception e) {
             throw e;

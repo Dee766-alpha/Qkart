@@ -62,8 +62,6 @@ public class Register {
         // Click the register now button
         register_now_button.click();
         Thread.sleep(5000);
-        //WebDriverWait wait = new WebDriverWait(driver, 30);
-        //wait.until(ExpectedConditions.alertIsPresent());
 
 
 
