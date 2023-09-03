@@ -2,7 +2,6 @@ package QKART_TESTNG;
 
 import java.io.File;
 import java.sql.Driver;
-import org.hamcrest.Description;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;

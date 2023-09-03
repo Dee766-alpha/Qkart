@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SearchResult {
     WebElement parentElement;
+    
 
     public SearchResult(WebElement SearchResultElement) {
         this.parentElement = SearchResultElement;

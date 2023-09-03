@@ -13,37 +13,49 @@ apply plugin: 'application'
 group 'org.example'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+// sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
     implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.3'
     implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-alpha-1'
     testImplementation group: 'org.testng', name: 'testng', version: '7.6.0'
 
+    // implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.0.0-alpha-1'
+    // testImplementation group: 'org.testng', name: 'testng', version: '7.6.0'
+
+    // implementation group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '4.4.3'
+    // implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
+
+    // // https://mvnrepository.com/artifact/org.apache.poi/poi
+    // implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
+
+    // // https://mvnrepository.com/artifact/org.apache.poi/poi-ooxml
+    // implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
+    
+    // // https://mvnrepository.com/artifact/com.relevantcodes/extentreports
+    // implementation group: 'com.relevantcodes', name: 'extentreports' , version: '2.40.2'
 }
 
-// Additional config for Crio workspace
-buildDir = '/tmp/external_build'
+//task startScript(type:Exec) {
+//    commandLine './selenium-run.sh'
+//}
 
-task startScript(type:Exec) {
-    commandLine '../selenium-run.sh'
-}
+//run.dependsOn startScript
 
-run.dependsOn startScript
-
-test.dependsOn startScript
-
+//test.dependsOn startScript
 test {
     useTestNG() {
-        useDefaultListeners = true
+        useDefaultListeners = true // generates the test report
         suites "src/test/java/QKART_TESTNG/testng.xml"
-        //suits "/home/crio-user/workspace/deepalimanav92-ME_QKART_QA/app/src/test/java/QKART_TESTNG/QKART_Tests.java"
+    
     }
+
 
     afterSuite { desc, result ->
             if (!desc.parent) {
@@ -66,6 +78,8 @@ test {
     testLogging.showStandardStreams = true
     test.outputs.upToDateWhen {false}
 
+mainClassName = 'QKART_TESTNG.App'
 }
 
-mainClassName = 'QKART_SANITY_LOGIN.Module1.QkartSanity'
+
+

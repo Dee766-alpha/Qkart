@@ -32,6 +32,8 @@ import org.testng.annotations.*;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import org.testng.asserts.SoftAssert;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class QKART_Tests {
 
@@ -41,10 +43,11 @@ public class QKART_Tests {
      @BeforeSuite(alwaysRun = true)
     public static void createDriver() throws MalformedURLException {
         // Launch Browser using Zalenium
-        final DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setBrowserName(BrowserType.CHROME);
-        driver = new RemoteWebDriver(new URL("http://localhost:8082/wd/hub"), capabilities);
-        System.out.println("createDriver()");
+
+        System.setProperty("webdriver.chrome.driver","E:\\seleniumdrivers\\chromedriver.exe");
+            ChromeOptions obj = new ChromeOptions();
+            obj.setBinary("E:\\seleniumdrivers\\chromedriver.exe");
+         driver  = new ChromeDriver();
       
     }
 
@@ -110,6 +113,7 @@ public class QKART_Tests {
             FileUtils.copyFile(SrcFile, DestFile);
         } catch (Exception e) {
             e.printStackTrace();
+
         }
     }
     /*
